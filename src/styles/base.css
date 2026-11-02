@@ -1,0 +1,62 @@
+@import "./tokens.css";
+
+@font-face { font-family: "Poppins"; font-weight: 400; font-style: normal; font-display: swap; src: url("/fonts/poppins-400.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 500; font-style: normal; font-display: swap; src: url("/fonts/poppins-500.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 600; font-style: normal; font-display: swap; src: url("/fonts/poppins-600.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 700; font-style: normal; font-display: swap; src: url("/fonts/poppins-700.woff2") format("woff2"); }
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; background: transparent; }
+body {
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus, :focus-visible { outline: none; }
+input, textarea { font: inherit; color: inherit; }
+::selection { background: var(--accent-soft); }
+
+/* scrollbars: slim, only visible on hover of the scrolling area */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: transparent; border-radius: 99px; }
+*:hover > ::-webkit-scrollbar-thumb, *:hover::-webkit-scrollbar-thumb { background: var(--border-strong); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-3); }
+::-webkit-scrollbar-track { background: transparent; }
+
+.icon-btn {
+  display: inline-grid; place-items: center;
+  width: 32px; height: 32px; border-radius: var(--r-sm);
+  color: var(--ink-2);
+  transition: background var(--t-fast) var(--ease), color var(--t-fast);
+}
+.icon-btn:hover { background: var(--surface-3); color: var(--ink); }
+.icon-btn:active { background: var(--surface-2); }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 30px; padding: 0 12px; border-radius: var(--r-pill);
+  color: var(--ink-2); font-weight: 500;
+  transition: background var(--t-med) var(--ease), color var(--t-fast), transform var(--t-fast) var(--ease);
+}
+.pill:active { transform: scale(0.96); }
+.pill:hover { background: var(--surface-2); color: var(--ink); }
+.pill[data-active="true"] { background: var(--surface-3); color: var(--ink); }
+
+.avatar {
+  display: grid; place-items: center; flex-shrink: 0;
+  border-radius: 28%;
+  background: linear-gradient(145deg, var(--a1), var(--a2));
+  color: rgba(255, 250, 244, 0.95); font-weight: 700; letter-spacing: -0.02em;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+/* avatar showing an image instead of an initial: profile photos fill, brand icons get a little padding */
+.avatar[data-img="true"] { background: #fff; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar[data-icon="true"] img { object-fit: contain; padding: 14%; }

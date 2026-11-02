@@ -1,0 +1,131 @@
+.reader {
+  position: relative;
+  flex: 1; min-width: 0; height: 100%;
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  overflow: hidden;
+}
+/* The panel outline, drawn as an overlay so it can dissolve around the window buttons:
+   the top and right edges fade out as they approach the top-right corner. */
+.reader::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  border: 1px solid var(--line); border-radius: inherit;
+  -webkit-mask-image: radial-gradient(ellipse 320px 240px at 100% 0, transparent 40%, #000 100%);
+  mask-image: radial-gradient(ellipse 320px 240px at 100% 0, transparent 40%, #000 100%);
+}
+/* And the surface itself melts into the frame color in that corner, so the buttons sit on the
+   same dark ground as the rail, not on the card. */
+.reader::after {
+  content: ""; position: absolute; top: 0; right: 0; width: 320px; height: 240px; pointer-events: none; z-index: 0;
+  /* Two edge strips: exactly the frame color AT the right edge and AT the top edge, blending inward.
+     A corner mask then lets them die out with distance, so the edge line disappears near the corner
+     and returns gradually further down / further left. */
+  background:
+    linear-gradient(to left, var(--bg) 0, transparent 160px),
+    linear-gradient(to bottom, var(--bg) 0, transparent 100px);
+  -webkit-mask-image: radial-gradient(ellipse 320px 240px at 100% 0, #000 20%, transparent 100%);
+  mask-image: radial-gradient(ellipse 320px 240px at 100% 0, #000 20%, transparent 100%);
+}
+.reader-bar, .thread, .reader-empty-art, .reader-empty p { position: relative; z-index: 2; }
+.reader-empty { align-items: center; justify-content: center; gap: var(--s-3); }
+.reader-empty p { margin: 0; color: var(--ink-3); font-size: 13px; }
+.reader-empty-art {
+  display: grid; place-items: center; width: 72px; height: 72px; border-radius: 28%;
+  background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line);
+}
+
+/* Full-width header row. The divider under it fades out toward the right so the window
+   buttons read as sitting on the main surface, not boxed into the header. */
+.reader-bar {
+  position: relative; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px; padding: 0 var(--s-5);
+}
+.reader-bar::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: var(--line);
+  /* same ellipse as the corner fade, measured from the panel's top-right corner (55px above this line) */
+  -webkit-mask-image: radial-gradient(ellipse 300px 170px at 100% -55px, transparent 45%, #000 100%);
+  mask-image: radial-gradient(ellipse 300px 170px at 100% -55px, transparent 45%, #000 100%);
+}
+.reader-account {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  height: 30px; padding: 0 var(--s-3) 0 5px; border-radius: var(--r-pill);
+  background: var(--surface-2); color: var(--ink-2); font-size: 12.5px; font-weight: 500;
+}
+/* leaves room for the three window buttons at the right of the same row */
+.reader-actions { display: flex; gap: 2px; margin-right: 126px; }
+
+/* The conversation: a flat scrolling column, messages are the only cards. */
+.thread {
+  flex: 1; min-height: 0; overflow-y: auto;
+  padding: var(--s-4) var(--s-5) 28px;
+  display: flex; flex-direction: column; gap: var(--s-2);
+}
+.thread-head { flex-shrink: 0; display: flex; flex-direction: column; gap: var(--s-4); padding: var(--s-1) var(--s-1) var(--s-3); animation: rise 240ms var(--ease) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.reader-subject { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; color: var(--ink); user-select: text; }
+.thread-from { display: flex; align-items: center; gap: var(--s-3); }
+.thread-from-text { flex: 1; min-width: 0; user-select: text; }
+.thread-from-name { font-weight: 650; }
+.thread-from-email { font-size: 12px; color: var(--ink-3); }
+.thread-count { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+
+.msg {
+  flex-shrink: 0;
+  background: var(--surface-2); border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  animation: rise 260ms var(--ease) both;
+  transition: border-color var(--t-fast);
+}
+.msg:nth-child(2) { animation-delay: 40ms; } .msg:nth-child(3) { animation-delay: 80ms; } .msg:nth-child(n+4) { animation-delay: 120ms; }
+.msg[data-expanded="true"] { border-color: var(--line-strong); }
+.msg-head-row { display: flex; align-items: center; }
+.msg-tools { display: flex; gap: 0; padding-right: 6px; opacity: 0; transition: opacity var(--t-fast); }
+.msg:hover .msg-tools, .msg[data-expanded="true"] .msg-tools { opacity: 1; }
+.msg-tools .icon-btn { width: 30px; height: 30px; }
+.msg-head {
+  flex: 1; min-width: 0; text-align: left;
+  display: flex; align-items: center; gap: var(--s-2);
+  padding: var(--s-2) var(--s-4);
+  min-height: 40px;
+  transition: background var(--t-fast);
+}
+.msg[data-expanded="false"] .msg-head:hover { background: var(--surface-3); }
+.msg-who { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: var(--s-2); overflow: hidden; }
+.msg-subject { font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%; flex-shrink: 0; }
+.msg-snippet { font-size: 12.5px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-when { font-size: 11.5px; color: var(--ink-3); white-space: nowrap; }
+.msg-chevron { color: var(--ink-3); flex-shrink: 0; transition: transform var(--t-med) var(--ease); }
+.msg[data-expanded="true"] .msg-chevron { transform: rotate(180deg); }
+
+.msg-collapse { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--t-med) var(--ease); }
+.msg[data-expanded="true"] .msg-collapse { grid-template-rows: 1fr; }
+.msg-collapse > * { min-height: 0; overflow: hidden; }
+.msg-body-wrap { position: relative; padding: 0 var(--s-4) var(--s-4); opacity: 0; transition: opacity var(--t-med) var(--ease); }
+.msg[data-expanded="true"] .msg-body-wrap { opacity: 1; }
+.msg-body {
+  white-space: pre-wrap; font-size: 14.5px; line-height: 1.6; color: var(--ink);
+  transition: max-height 320ms var(--ease);
+  max-width: 68ch; user-select: text;
+}
+.msg-body[data-long="true"] { overflow: hidden; }
+.msg-body-wrap[data-clipped="true"] .msg-body {
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+.msg-more {
+  margin-top: var(--s-2); height: 28px; padding: 0 var(--s-3); border-radius: var(--r-pill);
+  background: var(--surface-3); color: var(--ink-2); font-weight: 600; font-size: 12.5px;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.msg-more:hover { color: var(--ink); }
+
+.msg-html { display: block; width: 100%; border: 0; background: transparent; border-radius: var(--r-md); opacity: 0; transition: height 160ms var(--ease), opacity 160ms var(--ease); }
+.msg-html[data-ready="true"] { opacity: 1; }
+.icon-btn[data-on="true"] { color: #d9a84a; }
+
+/* no scrollbar; the conversation scrolls with the wheel */
+.thread { scrollbar-width: none; }
+.thread::-webkit-scrollbar { display: none; }

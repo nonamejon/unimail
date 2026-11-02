@@ -1,0 +1,7 @@
+# Faster dev builds on the windows-gnu toolchain:
+# use the multi-threaded LLVM linker that ships with rustup instead of MinGW ld.
+[target.x86_64-pc-windows-gnu]
+rustflags = [
+  "-C", "link-arg=-fuse-ld=lld",
+  "-C", "link-arg=-BC:/Users/noname/.rustup/toolchains/stable-x86_64-pc-windows-gnu/lib/rustlib/x86_64-pc-windows-gnu/bin/gcc-ld",
+]

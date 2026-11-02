@@ -1,0 +1,15 @@
+/* Flush in the window's top-right corner, native caption-button geometry, in every state. */
+.winctl {
+  position: absolute; top: 0; right: 0; z-index: 40;
+  display: flex; gap: 0;
+}
+.winctl-btn {
+  display: grid; place-items: center;
+  width: 46px; height: 40px; border-radius: 0 0 var(--r-sm) var(--r-sm);
+  color: var(--ink-2);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.winctl-btn:hover { background: var(--surface-3); color: var(--ink); }
+.winctl-close { border-radius: 0 14px 0 var(--r-sm); }   /* follows the window's rounded corner */
+.winctl-close:hover { background: #c0393f; color: #fff; }
+.frame[data-maximized="true"] .winctl-close { border-radius: 0 0 0 var(--r-sm); }

@@ -1,0 +1,2 @@
+- [User profile](user-profile.md) — frontend dev, wants Rust + Tauri for desktop apps
+- [UniMail](multi-account-mail-app.md) — UniMail, Tauri mail client at D:/dev/plume, with Google sign-in account chooser, started Sept 2026

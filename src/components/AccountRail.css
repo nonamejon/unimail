@@ -1,0 +1,91 @@
+.rail {
+  width: 72px; height: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px; gap: var(--s-1);
+  background: var(--bg);
+}
+.rail-list {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: var(--s-1);
+  flex: 1; overflow-y: auto; width: 100%;
+  scrollbar-width: none;
+}
+.rail-list::-webkit-scrollbar { display: none; }
+
+/* One sliding highlight sits behind whichever tile is selected. */
+.rail-glide {
+  position: absolute; left: 0; top: 0; width: 52px; height: 52px;
+  border-radius: var(--r-lg);
+  background: #4a4541;
+  box-shadow: inset 0 0 0 1px rgba(255, 245, 230, 0.22);
+  transition: transform 320ms var(--ease-spring);
+  pointer-events: none;
+}
+
+/* Tiles are plain 52px squares; nothing about them changes size on selection. */
+.rail-item {
+  position: relative; z-index: 1; flex-shrink: 0;
+  display: grid; place-items: center;
+  width: 52px; height: 52px; border-radius: var(--r-lg);
+  transition: background var(--t-fast) var(--ease);
+}
+.rail-item:hover { background: #2a2725; }
+.rail-item[data-active="true"] { background: transparent; }
+
+/* Account avatars: 36px, and 38px when selected (inside the shell). */
+.rail-item .avatar { transition: transform 260ms var(--ease-spring); }
+.rail-item[data-active="true"] .avatar { transform: scale(1.055); }
+
+/* All Inboxes: a 38px square, always this size, on a clearly visible tint; white when selected. */
+.rail-all {
+  width: 38px; height: 38px; padding: 9px; border-radius: 28%;
+  background: #3a3633; color: var(--ink);
+  transition: background 200ms var(--ease), color var(--t-fast);
+}
+.rail-item[data-active="true"] .rail-all { background: var(--ink); color: var(--bg); }
+
+/* The plus: a 40px dashed square, clearly visible. */
+.rail-plus {
+  width: 40px; height: 40px; padding: 9px; border-radius: 28%;
+  border: 1.5px dashed rgba(255, 245, 230, 0.45); color: var(--ink);
+  transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+}
+.rail-add:hover .rail-plus { border-color: rgba(255, 245, 230, 0.7); background: #2a2725; }
+
+.rail-badge {
+  position: absolute; top: 4px; right: 4px;
+  min-width: 17px; height: 17px; padding: 0 5px; border-radius: 99px;
+  background: var(--accent); color: var(--accent-ink);
+  font-size: 10.5px; font-weight: 700; line-height: 17px; text-align: center;
+  box-shadow: 0 0 0 2px var(--bg);
+}
+
+/* right-click menu on an account */
+.ctx {
+  position: fixed; z-index: 80; min-width: 200px;
+  padding: 6px; border-radius: var(--r-md);
+  background: #2b2825; border: 1px solid rgba(255, 245, 230, 0.18);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+  animation: ctx-in 120ms var(--ease);
+}
+@keyframes ctx-in { from { opacity: 0; transform: translateY(-4px); } }
+.ctx-title { padding: 6px 8px 8px; font-size: 11.5px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ctx-hues { display: flex; gap: 6px; padding: 2px 8px 10px; }
+.ctx-hue {
+  width: 18px; height: 18px; border-radius: 30%;
+  background: linear-gradient(145deg, var(--a1), var(--a2));
+  box-shadow: 0 0 0 2px transparent;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+.ctx-hue:hover { transform: scale(1.12); }
+.ctx-hue[data-on="true"] { box-shadow: 0 0 0 2px #2b2825, 0 0 0 3.5px var(--ink); }
+.ctx-item {
+  width: 100%; display: flex; align-items: center; gap: 8px; text-align: left;
+  height: 32px; padding: 0 8px; border-radius: var(--r-sm);
+  color: var(--ink); font-size: 13px;
+}
+.ctx-item:hover { background: var(--surface-3); }
+.ctx-danger { color: #e5686d; }
+.ctx-danger:hover { background: rgba(192, 57, 63, 0.18); }
+
+.rail-badge-error { background: #d9484d; color: #fff; }
